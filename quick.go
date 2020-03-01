@@ -5,6 +5,14 @@ import (
 	"net/http"
 )
 
+type GinResponse interface {
+	RespOk(ctx *gin.Context, errmsg ...string)
+	RespBadRequest(ctx *gin.Context, errmsg ...string)
+	RespNotFound(ctx *gin.Context, errmsg ...string)
+	RespData(ctx *gin.Context, data interface{}, errmsg ...string)
+	Resp(ctx *gin.Context, code int, resp Response)
+}
+
 type QuickResp struct{}
 
 //RespOk response mean's ok
