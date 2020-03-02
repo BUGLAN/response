@@ -1,4 +1,4 @@
-module response
+module github.com/BUGLAN/response
 
 go 1.13
 
