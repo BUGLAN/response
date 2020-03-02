@@ -63,3 +63,13 @@ func TestQuickResp_Resp(t *testing.T) {
 	assert.Equal(t, code, http.StatusCreated)
 	assert.Equal(t, resp, Response{ErrMsg: "not ok", ErrCode: -2, Data: map[string]interface{}{"name": "lan"}})
 }
+
+func TestQuickResp_RespFail(t *testing.T) {
+	w := httptest.NewRecorder()
+	ctx := context(w)
+	quick.RespFail(ctx)
+	resp, code, err := getResp(w)
+	assert.Nil(t, err)
+	assert.Equal(t, code, http.StatusOK)
+	assert.Equal(t, resp, Response{ErrCode: -1, ErrMsg: "not ok"})
+}

@@ -24,6 +24,15 @@ func (r *QuickResp) RespOk(ctx *gin.Context, errmsg ...string) {
 	r.Resp(ctx, http.StatusOK, Response{ErrMsg: s})
 }
 
+//RespFail business fail code
+func (r *QuickResp) RespFail(ctx *gin.Context, errmsg ...string) {
+	s := "not ok"
+	if len(errmsg) > 0 {
+		s = errmsg[0]
+	}
+	r.Resp(ctx, http.StatusOK, Response{ErrMsg: s, ErrCode: -1})
+}
+
 //RespBadRequest means the client param error
 func (r *QuickResp) RespBadRequest(ctx *gin.Context, errmsg ...string) {
 	s := "bad request"
