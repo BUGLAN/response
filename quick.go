@@ -11,6 +11,7 @@ type GinResponse interface {
 	RespNotFound(ctx *gin.Context, errmsg ...string)
 	RespData(ctx *gin.Context, data interface{}, errmsg ...string)
 	Resp(ctx *gin.Context, code int, resp Response)
+	RespFail(ctx *gin.Context, errmsg ...string)
 }
 
 type QuickResp struct{}
