@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GinResponse gin response interface
 type GinResponse interface {
 	RespOk(ctx *gin.Context, errmsg ...string)
 	RespBadRequest(ctx *gin.Context, errmsg ...string)
@@ -15,6 +16,7 @@ type GinResponse interface {
 	RespFail(ctx *gin.Context, errmsg ...string)
 }
 
+// GinQuickResp gin quick response
 type GinQuickResp struct{}
 
 // RespOk response mean's ok
