@@ -1,73 +1,72 @@
 package response
 
 import (
-	"encoding/json"
-	"github.com/gin-gonic/gin"
-	"github.com/stretchr/testify/assert"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/labstack/echo/v4"
+	"github.com/stretchr/testify/assert"
 )
 
-var quick *QuickResp
+var echoResp *EchoQuickResp
 
-func context(w *httptest.ResponseRecorder) *gin.Context {
-	ctx, _ := gin.CreateTestContext(w)
-	return ctx
+func echoContext(w http.ResponseWriter) echo.Context {
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodPost, "/", nil)
+	return e.NewContext(req, w)
 }
 
-func getResp(w *httptest.ResponseRecorder) (Response, int, error) {
-	var resp Response
-	b, _ := ioutil.ReadAll(w.Body)
-	err := json.Unmarshal(b, &resp)
-	return resp, w.Code, err
-}
-
-func TestQuickResp_RespOk(t *testing.T) {
+func TestEchoQuickResp_RespOk(t *testing.T) {
 	w := httptest.NewRecorder()
-	ctx := context(w)
-	quick.RespOk(ctx)
+	ctx := echoContext(w)
+	assert.NotNil(t, ctx)
+	err := echoResp.RespOk(ctx)
+	assert.Nil(t, err)
 	resp, code, err := getResp(w)
 	assert.Nil(t, err)
-	assert.Equal(t, code, http.StatusOK)
+	assert.Equal(t, 200, code)
 	assert.Equal(t, resp, Response{ErrMsg: "ok"})
 }
 
-func TestQuickResp_RespBadRequest(t *testing.T) {
+func TestEchoQuickResp_RespBadRequest(t *testing.T) {
 	w := httptest.NewRecorder()
-	ctx := context(w)
-	quick.RespNotFound(ctx)
+	ctx := echoContext(w)
+	err := echoResp.RespNotFound(ctx)
+	assert.Nil(t, err)
 	resp, code, err := getResp(w)
 	assert.Nil(t, err)
 	assert.Equal(t, code, http.StatusNotFound)
 	assert.Equal(t, resp, Response{ErrMsg: "not found", ErrCode: http.StatusNotFound})
 }
 
-func TestQuickResp_RespData(t *testing.T) {
+func TestEchoQuickResp_RespData(t *testing.T) {
 	w := httptest.NewRecorder()
-	ctx := context(w)
-	quick.RespData(ctx, map[string]string{"name": "lan"})
+	ctx := echoContext(w)
+	err := echoResp.RespData(ctx, map[string]string{"name": "lan"})
+	assert.Nil(t, err)
 	resp, code, err := getResp(w)
 	assert.Nil(t, err)
 	assert.Equal(t, code, http.StatusOK)
 	assert.Equal(t, resp, Response{ErrMsg: "ok", Data: map[string]interface{}{"name": "lan"}})
 }
 
-func TestQuickResp_Resp(t *testing.T) {
+func TestEchoQuickResp_Resp(t *testing.T) {
 	w := httptest.NewRecorder()
-	ctx := context(w)
-	quick.Resp(ctx, http.StatusCreated, Response{ErrMsg: "not ok", ErrCode: -2, Data: map[string]string{"name": "lan"}})
+	ctx := echoContext(w)
+	err := echoResp.Resp(ctx, http.StatusCreated, Response{ErrMsg: "not ok", ErrCode: -2, Data: map[string]string{"name": "lan"}})
+	assert.Nil(t, err)
 	resp, code, err := getResp(w)
 	assert.Nil(t, err)
 	assert.Equal(t, code, http.StatusCreated)
 	assert.Equal(t, resp, Response{ErrMsg: "not ok", ErrCode: -2, Data: map[string]interface{}{"name": "lan"}})
 }
 
-func TestQuickResp_RespFail(t *testing.T) {
+func TestEchoQuickResp_RespFail(t *testing.T) {
 	w := httptest.NewRecorder()
-	ctx := context(w)
-	quick.RespFail(ctx)
+	ctx := echoContext(w)
+	err := echoResp.RespFail(ctx)
+	assert.Nil(t, err)
 	resp, code, err := getResp(w)
 	assert.Nil(t, err)
 	assert.Equal(t, code, http.StatusOK)

@@ -1,8 +1,9 @@
 package response
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type GinResponse interface {
@@ -14,10 +15,10 @@ type GinResponse interface {
 	RespFail(ctx *gin.Context, errmsg ...string)
 }
 
-type QuickResp struct{}
+type GinQuickResp struct{}
 
-//RespOk response mean's ok
-func (r *QuickResp) RespOk(ctx *gin.Context, errmsg ...string) {
+// RespOk response mean's ok
+func (r *GinQuickResp) RespOk(ctx *gin.Context, errmsg ...string) {
 	s := "ok"
 	if len(errmsg) > 0 {
 		s = errmsg[0]
@@ -25,8 +26,8 @@ func (r *QuickResp) RespOk(ctx *gin.Context, errmsg ...string) {
 	r.Resp(ctx, http.StatusOK, Response{ErrMsg: s})
 }
 
-//RespFail business fail code
-func (r *QuickResp) RespFail(ctx *gin.Context, errmsg ...string) {
+// RespFail business fail code
+func (r *GinQuickResp) RespFail(ctx *gin.Context, errmsg ...string) {
 	s := "not ok"
 	if len(errmsg) > 0 {
 		s = errmsg[0]
@@ -34,8 +35,8 @@ func (r *QuickResp) RespFail(ctx *gin.Context, errmsg ...string) {
 	r.Resp(ctx, http.StatusOK, Response{ErrMsg: s, ErrCode: -1})
 }
 
-//RespBadRequest means the client param error
-func (r *QuickResp) RespBadRequest(ctx *gin.Context, errmsg ...string) {
+// RespBadRequest means the client param error
+func (r *GinQuickResp) RespBadRequest(ctx *gin.Context, errmsg ...string) {
 	s := "bad request"
 	if len(errmsg) > 0 {
 		s = errmsg[0]
@@ -43,8 +44,8 @@ func (r *QuickResp) RespBadRequest(ctx *gin.Context, errmsg ...string) {
 	r.Resp(ctx, http.StatusBadRequest, Response{ErrMsg: s})
 }
 
-//RespNotFound means resource not found
-func (r *QuickResp) RespNotFound(ctx *gin.Context, errmsg ...string) {
+// RespNotFound means resource not found
+func (r *GinQuickResp) RespNotFound(ctx *gin.Context, errmsg ...string) {
 	s := "not found"
 	if len(errmsg) > 0 {
 		s = errmsg[0]
@@ -52,8 +53,8 @@ func (r *QuickResp) RespNotFound(ctx *gin.Context, errmsg ...string) {
 	r.Resp(ctx, http.StatusNotFound, Response{ErrMsg: s, ErrCode: http.StatusNotFound})
 }
 
-//RespData data response
-func (r *QuickResp) RespData(ctx *gin.Context, data interface{}, errmsg ...string) {
+// RespData data response
+func (r *GinQuickResp) RespData(ctx *gin.Context, data interface{}, errmsg ...string) {
 	s := "ok"
 	if len(errmsg) > 0 {
 		s = errmsg[0]
@@ -61,7 +62,7 @@ func (r *QuickResp) RespData(ctx *gin.Context, data interface{}, errmsg ...strin
 	r.Resp(ctx, http.StatusOK, Response{ErrMsg: s, Data: data})
 }
 
-//Resp consume resp body
-func (r *QuickResp) Resp(ctx *gin.Context, code int, resp Response) {
+// Resp consume resp body
+func (r *GinQuickResp) Resp(ctx *gin.Context, code int, resp Response) {
 	ctx.JSON(code, resp)
 }
